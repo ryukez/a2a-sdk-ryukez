@@ -6,5 +6,5 @@ This project is licensed under the same terms as the original repository.
 ## インストール
 
 ```bash
-npm install a2a-sdk-ryukez@0.2.0
+npm install a2a-sdk-ryukez@0.2.1
 ```
