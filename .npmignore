@@ -1,0 +1,30 @@
+# ソースコード
+src/
+*.ts
+!*.d.ts
+
+# テスト
+test/
+__tests__/
+*.test.ts
+*.spec.ts
+
+# 設定ファイル
+.gitignore
+.npmignore
+tsconfig.json
+jest.config.js
+.eslintrc
+.prettierrc
+
+# ドキュメント
+*.md
+!README.md
+
+# その他
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db 
