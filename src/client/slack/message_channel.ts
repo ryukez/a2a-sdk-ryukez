@@ -183,9 +183,12 @@ const onArtifactUpdate =
     }
   };
 
-export const defaultSlackMessageChannel = (agentUrl: string, slack: App) =>
+export const defaultSlackMessageChannel = (
+  agentClient: A2AClient,
+  slack: App
+) =>
   new AgentMessageChannel<MessageContext>(
-    new A2AClient(agentUrl),
+    agentClient,
     onStatusUpdate(slack),
     onArtifactUpdate(slack)
   );

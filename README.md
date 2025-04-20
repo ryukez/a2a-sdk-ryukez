@@ -6,7 +6,7 @@ This project is licensed under the same terms as the original repository.
 ## Install
 
 ```bash
-npm install a2a-sdk-ryukez@0.4.0
+npm install a2a-sdk-ryukez@0.4.1
 ```
 
 ## Usage
@@ -84,6 +84,7 @@ server.start(); // Default port 41241
 
 ```ts
 import { App } from "@slack/bolt";
+import { A2AClient } from "a2a-sdk-ryukez";
 import { defaultSlackMessageChannel } from "a2a-sdk-ryukez/client/slack";
 
 const app = new App({
@@ -92,10 +93,8 @@ const app = new App({
   socketMode: true,
 });
 
-const agentMessageChannel = defaultSlackMessageChannel(
-  process.env.AGENT_URL!,
-  app
-);
+const agentClient = new A2AClient(process.env.AGENT_URL!);
+const agentMessageChannel = defaultSlackMessageChannel(agentClient, app);
 
 // mention
 app.event("app_mention", async ({ event }) => {
