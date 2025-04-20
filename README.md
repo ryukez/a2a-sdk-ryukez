@@ -92,11 +92,6 @@ const app = new App({
   socketMode: true,
 });
 
-type MessageContext = {
-  channel: string;
-  threadTs: string;
-};
-
 const agentMessageChannel = defaultSlackMessageChannel(
   process.env.AGENT_URL!,
   app
@@ -105,25 +100,6 @@ const agentMessageChannel = defaultSlackMessageChannel(
 // mention
 app.event("app_mention", async ({ event }) => {
   const threadTs = event.thread_ts || event.ts;
-
-  agentMessageChannel.userMessage({
-    taskId: threadTs,
-    sessionId: threadTs,
-    text: event.text,
-    context: { channel: event.channel, threadTs },
-  });
-});
-
-// thread message
-app.event("message", async ({ event }) => {
-  if (!("thread_ts" in event) || !event.thread_ts) {
-    return;
-  }
-  if (!event.text) {
-    return;
-  }
-
-  const threadTs = event.thread_ts;
 
   agentMessageChannel.userMessage({
     taskId: threadTs,
