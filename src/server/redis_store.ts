@@ -5,9 +5,11 @@ import { A2AError } from "./error";
 export interface RedisStoreOptions {
   host?: string;
   port?: number;
+  username?: string;
   password?: string;
   db?: number;
   keyPrefix?: string;
+  tls?: boolean;
 }
 
 export class RedisStore {
@@ -18,17 +20,21 @@ export class RedisStore {
     const {
       host = "localhost",
       port = 6379,
+      username,
       password,
       db = 0,
       keyPrefix = "a2a:",
+      tls = process.env.REDIS_TLS === "true",
     } = options;
 
     this.keyPrefix = keyPrefix;
     this.redis = new Redis({
       host,
       port,
+      username,
       password,
       db,
+      tls: tls ? {} : undefined,
       retryStrategy: (times) => {
         const delay = Math.min(times * 50, 2000);
         return delay;

@@ -6,7 +6,7 @@ This project is licensed under the same terms as the original repository.
 ## Install
 
 ```bash
-npm install a2a-sdk-ryukez@0.4.1
+npm install a2a-sdk-ryukez@0.4.3
 ```
 
 ## Usage
@@ -103,7 +103,7 @@ app.event("app_mention", async ({ event }) => {
   agentMessageChannel.userMessage({
     taskId: threadTs,
     sessionId: threadTs,
-    text: event.text,
+    parts: [{ type: "text", text: event.text }],
     context: { channel: event.channel, threadTs },
   });
 });

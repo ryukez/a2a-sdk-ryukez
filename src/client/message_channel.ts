@@ -5,7 +5,7 @@ import AsyncLock from "async-lock";
 export type UserMessage<C> = {
   taskId: string;
   sessionId: string;
-  text: string;
+  parts: schema.Part[];
   context: C;
 };
 
@@ -63,7 +63,7 @@ export class AgentMessageChannel<C> {
       sessionId: userMessage.sessionId,
       message: {
         role: "user",
-        parts: [{ type: "text", text: userMessage.text }],
+        parts: userMessage.parts,
       },
     };
 
