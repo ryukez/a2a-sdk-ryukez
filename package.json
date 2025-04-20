@@ -1,6 +1,6 @@
 {
   "name": "a2a-sdk-ryukez",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "description": "A2A (Agent-to-Agent) SDK for Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "@slack/bolt": "^4.2.1",
+    "@types/ioredis": "^4.28.10",
     "async-lock": "^1.4.1",
     "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "ioredis": "^5.6.1"
   },
   "devDependencies": {
     "@types/async-lock": "^1.4.2",
