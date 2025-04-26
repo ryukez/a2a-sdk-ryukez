@@ -1,5 +1,5 @@
 {
-  "name": "a2a-sdk-ryukez",
+  "name": "@ryukez/a2a-sdk",
   "version": "0.4.5",
   "description": "A2A (Agent-to-Agent) SDK for Node.js",
   "main": "dist/index.js",
