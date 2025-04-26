@@ -4,7 +4,7 @@ import AsyncLock from "async-lock";
 
 export type UserMessage<C> = {
   taskId: string;
-  sessionId: string;
+  sessionId?: string;
   parts: schema.Part[];
   context: C;
 };
@@ -19,28 +19,21 @@ export type OnArtifactUpdate<C> = (
   event: schema.TaskArtifactUpdateEvent
 ) => Promise<void>;
 
-class Queue<T> {
-  private queue: T[] = [];
+class Queue<T extends { taskId: string }> {
   private lock = new AsyncLock();
 
-  constructor(private readonly processItem: (item: T) => Promise<void>) {}
+  constructor(private readonly processItem: (task: T) => Promise<void>) {}
 
-  async add(item: T): Promise<void> {
-    this.queue.push(item);
-    await this.process();
+  async add(task: T): Promise<void> {
+    return this.process(task);
   }
 
-  private async process(): Promise<void> {
-    await this.lock.acquire("processing", async () => {
-      while (this.queue.length > 0) {
-        const item = this.queue.shift()!;
-
-        try {
-          await this.processItem(item);
-          break;
-        } catch (error) {
-          console.error(`Item processing failed:`, item);
-        }
+  private async process(task: T): Promise<void> {
+    await this.lock.acquire(task.taskId, async () => {
+      try {
+        await this.processItem(task);
+      } catch (error) {
+        console.error(`Task processing failed:`, task);
       }
     });
   }
