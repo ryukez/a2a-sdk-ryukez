@@ -8,6 +8,7 @@ import {
 } from "../message_channel";
 import { FilePart } from "../../schema";
 import { A2AClient } from "../client";
+import { MetadataKeyMessageChannelUserId } from "../metadata";
 
 type MessageContext = {
   channel: string;
@@ -65,11 +66,21 @@ const onStatusUpdate =
   (slack: App): OnStatusUpdate<MessageContext> =>
   async (userMessage, event) => {
     const agentMessage = event.status.message;
+
+    let header = "";
+    if (event.status.state === "input-required") {
+      const userId =
+        event.status.message?.metadata?.[MetadataKeyMessageChannelUserId];
+      if (userId) {
+        header += `<@${userId}>`;
+      }
+    }
+
     for (const part of agentMessage?.parts ?? []) {
       switch (part.type) {
         case "text": {
           await slack.client.chat.postMessage({
-            text: part.text,
+            text: `${header}\n${part.text}`,
             channel: userMessage.context.channel,
             thread_ts: userMessage.context.threadTs,
           });
@@ -80,7 +91,7 @@ const onStatusUpdate =
           const text = "```\n" + JSON.stringify(part.data, null, 2) + "\n```";
 
           await slack.client.chat.postMessage({
-            text,
+            text: `${header}\n${text}`,
             channel: userMessage.context.channel,
             thread_ts: userMessage.context.threadTs,
           });
@@ -93,7 +104,17 @@ const onStatusUpdate =
           ]);
           if (blocks.length > 0) {
             await slack.client.chat.postMessage({
-              blocks,
+              blocks: [
+                ...(header.length > 0
+                  ? [
+                      {
+                        type: "section",
+                        text: { type: "mrkdwn", text: header },
+                      } satisfies KnownBlock,
+                    ]
+                  : []),
+                ...blocks,
+              ],
               channel: userMessage.context.channel,
               thread_ts: userMessage.context.threadTs,
             });
