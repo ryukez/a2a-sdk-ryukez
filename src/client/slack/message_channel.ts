@@ -8,7 +8,6 @@ import {
 } from "../message_channel";
 import { FilePart } from "../../schema";
 import { A2AClient } from "../client";
-import { MetadataKeyMessageChannelUserId } from "../metadata";
 
 type MessageContext = {
   channel: string;
@@ -69,8 +68,7 @@ const onStatusUpdate =
 
     let header = "";
     if (event.status.state === "input-required") {
-      const userId =
-        event.status.message?.metadata?.[MetadataKeyMessageChannelUserId];
+      const userId = userMessage.userId;
       if (userId) {
         header += `<@${userId}>`;
       }

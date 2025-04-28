@@ -1,7 +1,6 @@
 import * as schema from "../schema.js";
 import { A2AClient } from "./client.js";
 import AsyncLock from "async-lock";
-import { MetadataKeyMessageChannelUserId } from "./metadata.js";
 
 export type UserMessage<C> = {
   taskId: string;
@@ -59,9 +58,6 @@ export class AgentMessageChannel<C> {
       message: {
         role: "user",
         parts: userMessage.parts,
-        metadata: {
-          [MetadataKeyMessageChannelUserId]: userMessage.userId,
-        },
       },
     };
 
