@@ -1,17 +1,17 @@
-import * as schema from "../schema.js";
+import * as schema from "../types.js";
 
 /**
  * Custom error class for A2A server operations, incorporating JSON-RPC error codes.
  */
 export class A2AError extends Error {
-  public code: schema.KnownErrorCode | number;
-  public data?: unknown;
+  public code: number;
+  public data?: Record<string, unknown>;
   public taskId?: string; // Optional task ID context
 
   constructor(
-    code: schema.KnownErrorCode | number,
+    code: number,
     message: string,
-    data?: unknown,
+    data?: Record<string, unknown>,
     taskId?: string
   ) {
     super(message);
@@ -24,45 +24,47 @@ export class A2AError extends Error {
   /**
    * Formats the error into a standard JSON-RPC error object structure.
    */
-  toJSONRPCError(): schema.JSONRPCError<unknown> {
-    const errorObject: schema.JSONRPCError<unknown> = {
+  toJSONRPCError(): schema.JSONRPCError {
+    const errorObject: schema.JSONRPCError = {
       code: this.code,
       message: this.message,
     };
-    if (this.data !== undefined) {
+
+    if(this.data !== undefined) {
       errorObject.data = this.data;
     }
+ 
     return errorObject;
   }
 
   // Static factory methods for common errors
 
-  static parseError(message: string, data?: unknown): A2AError {
-    return new A2AError(schema.ErrorCodeParseError, message, data);
+  static parseError(message: string, data?: Record<string, unknown>): A2AError {
+    return new A2AError(-32700, message, data);
   }
 
-  static invalidRequest(message: string, data?: unknown): A2AError {
-    return new A2AError(schema.ErrorCodeInvalidRequest, message, data);
+  static invalidRequest(message: string, data?: Record<string, unknown>): A2AError {
+    return new A2AError(-32600, message, data);
   }
 
   static methodNotFound(method: string): A2AError {
     return new A2AError(
-      schema.ErrorCodeMethodNotFound,
+      -32601,
       `Method not found: ${method}`
     );
   }
 
-  static invalidParams(message: string, data?: unknown): A2AError {
-    return new A2AError(schema.ErrorCodeInvalidParams, message, data);
+  static invalidParams(message: string, data?: Record<string, unknown>): A2AError {
+    return new A2AError(-32602, message, data);
   }
 
-  static internalError(message: string, data?: unknown): A2AError {
-    return new A2AError(schema.ErrorCodeInternalError, message, data);
+  static internalError(message: string, data?: Record<string, unknown>): A2AError {
+    return new A2AError(-32603, message, data);
   }
 
   static taskNotFound(taskId: string): A2AError {
     return new A2AError(
-      schema.ErrorCodeTaskNotFound,
+      -32001,
       `Task not found: ${taskId}`,
       undefined,
       taskId
@@ -71,7 +73,7 @@ export class A2AError extends Error {
 
   static taskNotCancelable(taskId: string): A2AError {
     return new A2AError(
-      schema.ErrorCodeTaskNotCancelable,
+      -32002,
       `Task not cancelable: ${taskId}`,
       undefined,
       taskId
@@ -80,14 +82,14 @@ export class A2AError extends Error {
 
   static pushNotificationNotSupported(): A2AError {
     return new A2AError(
-      schema.ErrorCodePushNotificationNotSupported,
+      -32003,
       "Push Notification is not supported"
     );
   }
 
   static unsupportedOperation(operation: string): A2AError {
     return new A2AError(
-      schema.ErrorCodeUnsupportedOperation,
+      -32004,
       `Unsupported operation: ${operation}`
     );
   }

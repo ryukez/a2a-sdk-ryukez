@@ -1,19 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es2018",
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "declaration": true,
-    "outDir": "./dist",
-    "strict": true,
-    "esModuleInterop": true,
+    "target": "es2022",
+    "module": "NodeNext",
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
+    "rootDir": ".",
+    "outDir": "build",
     "sourceMap": true,
-    "rootDir": "./src",
-    "lib": ["es2018", "dom"]
+    "declaration": true,
+    "esModuleInterop": true, // Often helpful with NodeNext
+    "resolveJsonModule": true // Good practice for importing JSON if needed
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/__tests__/*"]
+  "include": ["src/**/*.ts", "test/**/*.ts"]
 }
